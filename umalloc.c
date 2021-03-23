@@ -155,9 +155,9 @@ void free_list_delete(memory_block_t *block) {
  */
 memory_block_t *find(size_t size) {
     //user requests a block of memory larger than heap
-    if (ALIGN(size) > 16 * PAGESIZE) {
-        return NULL;
-    }
+    // if (ALIGN(size) > 16 * PAGESIZE) {
+    //     return NULL;
+    // }
     //node used to iterate through linked list
     memory_block_t *traverse = free_head;
     //iterates until first block that is free and larger than requested size is found
@@ -196,7 +196,7 @@ memory_block_t *extend(size_t size) {
 memory_block_t *split(memory_block_t *block, size_t size) {
     assert(get_size(block) >= ALIGN(size));
     assert(!is_allocated(block));
-    if (get_size(block) >= (2 * ALIGNMENT) + ALIGN(size)) {
+    if (get_size(block) >= (3 * ALIGNMENT) + ALIGN(size)) {
         memory_block_t *new_node = (memory_block_t *)((void*)block + get_size(block) - ALIGN(size));
         put_block(new_node, ALIGN(size), true);
         new_node->next = NULL;
@@ -233,11 +233,11 @@ memory_block_t *coalesce(memory_block_t *block) {
  * along with allocating initial memory.
  */
 int uinit() {
-    free_head = csbrk(16 * PAGESIZE);
+    free_head = csbrk(8 * PAGESIZE);
     if (free_head == NULL) {
         return -1;
     }
-    put_block(free_head, PAGESIZE * 16 - sizeof(memory_block_t), false);
+    put_block(free_head, PAGESIZE * 8 - sizeof(memory_block_t), false);
     // do this in put_block
     free_head->next = NULL;
     free_head->prev = NULL;
