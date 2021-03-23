@@ -14,7 +14,15 @@
 typedef struct memory_block_struct {
     size_t block_size_alloc;
     struct memory_block_struct *next;
+    struct memory_block_struct *prev;
+    void *pad;
 } memory_block_t;
+/*
+typedef struct memory_block_footer {
+    size_t block_size_alloc;
+    void *pad;
+} memory_footer;
+*/
 
 // Helper Functions, this may be editted if you change the signature in umalloc.c
 bool is_allocated(memory_block_t *block);
@@ -25,6 +33,17 @@ memory_block_t *get_next(memory_block_t *block);
 void put_block(memory_block_t *block, size_t size, bool alloc);
 void *get_payload(memory_block_t *block);
 memory_block_t *get_block(void *payload);
+/*
+bool is_allocated_f(memory_footer *block);
+void allocate_f(memory_footer *block);
+void deallocate_f(memory_footer *block);
+size_t get_size_f(memory_footer *block);
+void put_block_f(memory_footer *block, size_t size, bool alloc);
+void *get_payload_f(memory_footer *block);
+memory_footer *get_footer(void *payload);
+*/
+void free_list_add(memory_block_t *block);
+void free_list_delete(memory_block_t *block);
 
 memory_block_t *find(size_t size);
 memory_block_t *extend(size_t size);

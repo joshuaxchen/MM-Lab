@@ -54,7 +54,7 @@ int check_heap()
         // Checks if the pointer of nextnode is contiguous to heapnode by
         // matching the pointer arithmetic of heapnode to nextnode's address
         if (nextnode != NULL && (char *)heapnode + get_size(heapnode) +
-            sizeof(memory_block_t) == nextnode) {
+            sizeof(memory_block_t) == (char *)nextnode) {
             return 9;
         }
         heapnode = get_next(heapnode);
