@@ -9,22 +9,18 @@
  * struct can be left as is, or modified for your design.
  * In the current design bit0 is the allocated bit
  * bits 1-3 are unused.
- * and the remaining 60 bit represent the size.
+ * and the remaining 60 bit represent the size. 
+ * Added a pointer to previous memory block for doubly linked list and a 
+ * void pointer for padding and alignment purposes.
  */
 typedef struct memory_block_struct {
     size_t block_size_alloc;
     struct memory_block_struct *next;
     struct memory_block_struct *prev;
-    void *pad;
+    void *padding;
 } memory_block_t;
-/*
-typedef struct memory_block_footer {
-    size_t block_size_alloc;
-    void *pad;
-} memory_footer;
-*/
 
-// Helper Functions, this may be editted if you change the signature in umalloc.c
+// Helper Functions, this may be edited if you change the signature in umalloc.c
 bool is_allocated(memory_block_t *block);
 void allocate(memory_block_t *block);
 void deallocate(memory_block_t *block);
@@ -33,21 +29,15 @@ memory_block_t *get_next(memory_block_t *block);
 void put_block(memory_block_t *block, size_t size, bool alloc);
 void *get_payload(memory_block_t *block);
 memory_block_t *get_block(void *payload);
-/*
-bool is_allocated_f(memory_footer *block);
-void allocate_f(memory_footer *block);
-void deallocate_f(memory_footer *block);
-size_t get_size_f(memory_footer *block);
-void put_block_f(memory_footer *block, size_t size, bool alloc);
-void *get_payload_f(memory_footer *block);
-memory_footer *get_footer(void *payload);
-*/
+
+// Added functions that add or delete the memory blocks on the free list
 void free_list_add(memory_block_t *block);
 void free_list_delete(memory_block_t *block);
 
 memory_block_t *find(size_t size);
 memory_block_t *extend(size_t size);
 memory_block_t *split(memory_block_t *block, size_t size);
+// Did not implement coalesce
 memory_block_t *coalesce(memory_block_t *block);
 
 
